@@ -1,0 +1,107 @@
+\section*{D. Shopping Malls}
+
+This task provides us with a representation of a graph, with edges being of one
+of four types \emph{walking}, \emph{stairs}, \emph{lift} or \emph{escalator}.
+We are asked to determine the path between several pairs of vertices with shortest
+walking distance.
+
+We first note that for each method of travel, we have a method for determining
+the walking distance for that method. In particular, given some edge we can
+determine the walking distance for that edge regardless of other edges used in
+a path containing this edge. Note that this may not be the case if, say, we had
+another edge type \emph{fitness door} that only allowed access after a certain
+distance had been travelled prior to reaching one of its endpoints. All methods
+of travel are bidirectional, however some methods have different weights for
+each direction, so we treat the entire graph as directed so as to allow this
+asymmetry to be represented.
+
+We notice that we are guaranteed that there is a path from every vertex to
+every other vertex, and so we need not handle that case. We are also guaranteed
+that there can be no implicit edges or vertices (like those that might be
+formed from lifts visiting intermediate floors), so we can take the edge list
+as is.
+
+Given that all edges have a fixed weight, we find that the task can be solved
+with a simple application of any shortest path algorithm that would work on a
+directed weighted graph. Unfortunately, in this task we are required to provide
+the path itself for each query, rather than just the length of the path. We
+will describe two methods for computing this.
+
+\subsection*{With Dijkstra's algorithm}
+
+We notice that even a naive $O(N^2)$ application of Dijsktra's algorithm for
+each query is acceptable given the bounds.
+
+In order to compute the path itself using Dijkstra's algorithm, we can maintain
+a lookup table for each vertex $v_i$ that contains the \emph{previous} vertex
+in the shortest path from the source vertex to $v_i$. This would be maintained
+in the same manner as the table of best known distances to each vertex.
+
+When we have completed the algorithm, we are left with a table that we can
+\emph{backtrack} through. That is, we look at our target vertex and repeatedly
+follow the vertices lookup table backwards, reforming the path backwards from
+the target to the source. Note that if the graph were symmetric, we could have
+instead calculated the shortest path from the target to the source, removing
+the need to reverse our resultant path.
+
+If we were to do this for each query, we would have an algorithm that runs in
+$O(N^2Q)$ time, which is sufficient for the given bounds.
+
+Note that if we had simple interesting edges, such as the fitness door
+mentioned above, this algorithm would still work.
+
+\subsection*{With the Floyd-Warshall algorithm}
+
+We also notice that a $O(N^3)$ precalculation of the shortest paths for all
+pairs of vertices would also be sufficient, as we can then answer all queries
+in constant-ish time. We can't answer queries in constant time as we have to
+provide the path, which is of $O(N)$ length. This would still be sufficient,
+though.
+
+Again, having to deal with providing paths makes this implementation of the
+Floyd-Warshall algorithm somewhat less trivial. We use a similar technique to
+the one used in Dijkstra's algorithm in that we will keep track of the pivot
+vertex that we used to get the shortest path between all pairs of vertices.
+This will be maintained in a similar manner to how the table of best distances
+is maintained and updated.
+
+Once we have calculated the shortest path between all pairs of vertices, to
+answer a query requires recursively (or otherwise) rebuilding the path based
+off the pivots used. We define a function $g(a, b)$ to be sequence of vertices
+that we visit in a shortest path from $a$ to $b$. To prevent duplication of
+vertices while computing this, we will define the sequence of vertices such
+that it must contain $a$ as the first element, and will {\bf not} contain $b$
+as it's last element. The function is inclusive-exclusive.
+
+If we maintained our table of pivots correctly, we should have the following
+definition for $g$:
+
+\[g(a, b) = \left\{
+  \begin{array}{lr}
+      g(a, pivot_{a, b}) \| g(pivot_{a, b}, b) & \text{if } pivot_{a, b} \text{is defined} \\
+      {[}a{]} & \text{otherwise}
+  \end{array}
+\right.
+\]
+
+\noindent
+where $\|$ represents the concatenation of sequences.
+
+We then print out this sequence suffixed by the target vertex, since out
+definition of $g$ omits it.
+
+Note here that the existence of a path between vertices $a$ and $b$ would imply
+that we've calculated some pivot for it. This is only not the case if there
+exists a direct edge from $a$ to $b$, in which case our definition of $g$ would
+have us simply return $a$.
+
+This gives us a $O(N^3 + NQ)$ solution.
+
+\subsection*{Some extra thoughts}
+
+During the contest, we had to choose between the two methods detailed above. We
+almost immediately went for the second, since an implementation of
+Floyd-Warshall's algorithm is extremely short and easy to write up. It's the
+less ``general'' of the two, since we cannot handle edges that might (for
+example) rely upon the length of the path so far, but this did not matter in
+this case.
