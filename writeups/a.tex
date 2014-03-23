@@ -1,0 +1,27 @@
+\section*{A. What Does the Fox Say?}
+
+The task asks us to print out a list of ``animal sounds'' with certain ``invalid''
+animal sounds filtered out. This task is rather straightforward, and the bounds
+are such that we can naively iterate through the invalid sounds for each string
+in the list we are to filter, and print the word in the list accordingly.
+
+Perhaps the most interesting part of this task is reading in the input, as we
+are not told the number of words in the list. There are a few ways of doing
+this. The method presented in the source relies upon the word list having no
+trailing spaces. We scan in each string and the character immediately following
+it, stopping when we find a string followed by a newline. Other methods include
+reading in the entire line and parsing each word based on whitespace, as well
+as using the {\tt stringstream} library to parse the line.
+
+The same can be done for parsing the list of invalid sounds. Alternatively,
+it's possible to use strchr to take advantage of strchr since the index of the
+word is known, as we have done.
+
+In order to detect invalid words as we iterating through the word, instead of
+the naive iteration through the invalid words, we can use an STL {\tt set}. If
+using C, we could implement a prefix tree to a similar effect.
+
+The algorithm is $O(L|S|\log|I|)$, where $|S|$ is the size of the word list,
+$|I|$ the size of the invalid word list and $L$ the maximum length of the
+strings. The naive algorithm would be $O(L|S||I|)$, which (as mentioned above)
+would be allowed with the given bounds.
