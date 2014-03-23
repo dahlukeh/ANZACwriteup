@@ -1,0 +1,19 @@
+\subsection*{C. Fraud Busters}
+
+The task asks us to filter a list of alphanumeric strings for those that match
+some ``scanned'' string. A scanned string is defined to be some
+alphanumeric strings with certain characters replaced by asterisks, which act
+as a wildcard character and will match on any character.
+
+This problem is arguably the easiest task of the round in terms of thinking and
+coding time (the other contender being task A). The most interesting part of
+the task is detecting whether a string $s$ matches our scanned string $s'$. We
+simply iterate through the characters, setting a flag to false if the character
+in $s'$ is not an asterisk or equal to the corresponding character in $s$, as
+per the definition of a scanned string.
+
+One minor annoyance is the requirement to provide the number of matching
+strings as the first line in the output, which prevents us from simply printing
+out matching strings as we detect them. This can be done by marking strings as
+matching, then printing them out after the count of the number of matching
+strings found.
