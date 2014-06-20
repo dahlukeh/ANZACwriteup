@@ -1,0 +1,66 @@
+\section*{J. The Urge to Merge}
+
+The task asks us to maximise the sum of the product of disjoint edgewise
+adjacent pairs of cells on a $3$ by $n$ grid.
+
+A massive hint towards the solution is the constant number of rows, and in
+particular the fact that it is so small. This allows an algorithm that runs in
+exponential time to the number of rows. We often find that problems that
+involve a grid and matching up pairs of edgewise adjacent cells give rise to
+some sort of dynamic programming algorithm where a component of the state is
+some representation of the ``frontier'' of 1x2 tiles.
+
+The idea of the frontier comes from the fact that any tiling can be formed by
+placing tiles from the leftmost column to the rightmost column, only placing a
+tile within 2 columns of the leftmost empty cell. In this problem we are
+allowed to have unmatched cells, so we consider it possible to place 1x1 tiles.
+
+Since we only need to consider the last 2 columns of some partial tiling, we
+can represent this with the offset of the column of leftmost empty cell for
+each row, which gives us 3 numbers in the range $[0, 2]$. Note that this is not
+a bitmask, since each row has 3 possible states, not 2.
+
+Our dynamic programming state is the maximum total value given the column from
+which the frontier will extend and the frontier state.
+
+Our base state is given by the column 0 with (0, 0, 0) as our frontier.
+
+Our recurrence is to consider placing a 1x1 tile in any row, placing a 1x2 tile
+lengthwise in any row, or placing a 1x2 tile across two rows with the same
+offset. We also allow moving our shifting the column from which the frontier
+extends if our frontier contains no rows that have an offset of 0.
+
+There are a few restrictions to whether or not we can place a tile, which all
+boil down to ensuring that placing a tile does not push the maximum offset to
+more than 2.
+
+The time complexity of this algorithm is given by the product of the size of
+the state space and the time complexity of the recurrence. Since the number of
+rows is constant, the number of frontier states is also constant. The only
+other component of our state space is the column, of which there are $O(N)$.
+The recurrence happens to also be constant time, since there are $3 + 2 + 3 + 1
+= 9$ possible placements of a 1x1 or 1x2 tile, or ways of shifting the frontier
+base. Thus the time complexity of this dynamic programming algorithm is $O(N)$,
+and memory complexity is $O(N)$.
+
+In terms of implementation, there are a few different approaches. Being a
+dynamic programming algorithm, there's always the question of whether we
+implement it iteratively bottom-up, or recursively top-down. Since $N$ is only
+$1\,000$, the usual concern of a stack overflow isn't really relevant. In
+general, top-down is often easier to implement, and so we choose to implement
+it recursively.
+
+The other consideration is how we implement the frontier. If the number of rows
+was larger, like 10 or so (which would leave $3^{10} = 59\,049$ possible
+frontier states), then we would almost certainly have to do some modulo
+arithmetic to store the frontier as an integer, and then have more modulo
+arithmetic to extract and query the state of the frontier, and even more to
+modify them. The other approach would be to pass an integer for each row in the
+grid to our recursive function, and to have our cache just be a $R + 1$
+dimension array (where $R$ is the number of rows, the extra dimension for the
+column number). For smaller numbers of rows, this second approach (though
+hackier and harder to generalise) is viable, and during the competition this
+second method was the one that we used.
+
+There are quite a few off-by-one errors that can occur. The second approach
+does make this much harder to debug, as we found out during the competition.
