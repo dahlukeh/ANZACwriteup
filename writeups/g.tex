@@ -1,0 +1,26 @@
+\section*{G. Cuckoo for Hashing}
+
+This task describes a parameterised hashing algorithm and asks us to calculate
+the final state of the hash tables after some series of element insertions,
+given the parameters for the algorithm. There isn't much to this task. It
+describes and algorithm and we are to implement it. Unfortunately, the
+implementation details aren't particularly interesting either, though there is
+a good deal of interesting theory underlying the hashing algorithm, but this is
+outside the scope of the contest.
+
+There are a couple different ways of implementing the hash function:
+iteratively or recursively. The code should end up looking very similar and
+take a very similar amount of time to write, but the recursive implementation
+can sometimes be easier to think about (though your mileage may vary).
+
+One minor annoyance, like in task C, is that if either table is empty, we
+should not print out the header for that table. This isn't as fiddly as it
+sounds, since we could just have flags that get set whenever we assign a value
+to a table, but the naive method (which is implemented in the source) is to
+just iterate through each table.
+
+As we are guaranteed that we will never hit an ``infinite loop'' in our hashing
+algorithm, we know that there can be no more than $2n$ elements inserted
+(because if there are, then by pigeon hole principle we cannot insert an
+element and will encounter an infinite loop). The number of jumps is at most
+$2n$ through similar reasoning, and so we have an $O(n^2)$ solution.

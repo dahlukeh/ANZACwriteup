@@ -1,0 +1,29 @@
+\section*{M. Ternarian Weights}
+
+This task asks for us to find two sets of powers of three that have a difference of $x$.
+
+We notice that if we consider $x$ modulo 3, then there are obviously 3 cases,
+0, 1 or 2.
+
+In the case of 0, we notice that we can divide the entire problem through by 3,
+and we are now trying to solve the problem ``find two sets of powers of powers
+of three that have a difference of $\frac x 3$''.
+
+In the case of 1, we can counter this by placing a weight of $3^0 = 1$ pounds
+on the right scale, and now we have a similar case to the above where we're
+trying to solve for $\frac x 3$.
+
+In the case of 2, we add a weight of $3^0 = 1$ points to the left scale,
+rounding the weight difference to the next multiple of three, and thus leaving
+us with the same problem for $\frac {x + 1} 3$.
+
+This leaves us with a nice recursive algorithm that runs in $O(\log x)$. During
+the competition we chose to implement this iteratively since this happened to
+be the way that we thought of it at the time. The idea of implementing this
+recursively only came after the competition, and the implementation would be
+more or less the same.
+
+One interesting thing to note with this algorithm is that it almost acts as a
+proof that the solution will be unique. Given some $x$, our only way to handle
+the least significant digit (base 3) is as described in the algorithm. We need
+to handle it, otherwise we can not have a difference of exactly $x$.

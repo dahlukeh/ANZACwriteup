@@ -1,0 +1,23 @@
+\section*{H. Generation of Tribbles}
+
+This task describes the Tribblenacci sequence, a sequence defined by a
+recurrence relation with a very similar structure to the Fibonacci sequence.
+The task asks us to calculate the g-th Tribblenacci value.
+
+This is a very straightforward task if implemented recursively, the only
+``trick'' involved being to remember to cache the values of Tribblenacci
+numbers that have already been calculated, so as to avoid having an exponential
+blowout in our recursion.
+
+We could also have implemented this iteratively, which would mean that we do
+not have to worry about caching values, since the iterative implementation is
+more or less the recursive algorithm implemented bottom-up.
+
+One potential bug would be using C ints to store the Tribblenacci values, since
+these values can grow up to $7057305768232953720 \approx 7 \times 10^{18}$ (as
+kindly presented in the sample data), and C ints can only hold up to 4 billion
+or so if we're using unsigned ints (which we obviously can, since the sequence
+is strictly increasing and starts of non-negative). A C unsigned long long can
+hold up to $2^{64} \approx 18 \times 10^{18}$, and so these are sufficient.
+
+This algorithm runs in $O(g)$.
