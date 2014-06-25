@@ -1,0 +1,29 @@
+\section*{N. Erratic Ants}
+
+For this task, we need to calculate the shortest way to get from the starting square to an ending square, however we can only go between squares if the original ant did. This is slightly confusing, since for the input:
+\begin{verbatim}
+N
+E
+S
+\end{verbatim}
+Which corresponds to:
+\\
+\begin{tabular}{ | c | c | }
+\hline
+1 & 2 \\ \hline
+0 & 3 \\ \hline
+\end{tabular}
+\\
+You would expect the answer to be 1 (moving east). However, we can only move from squares in ways the original ant did, and so our grid looks more like:
+\\
+\begin{tabular}{ | c | c | }
+\hline
+\multicolumn{1}{|c}{1} & 2 \\
+0 & 3 \\ \hline
+\end{tabular}
+\\
+Which clearly shows 3 steps being needed.
+
+However, we realise that we don't need to be particularly smart about how we find the shortest path. Rather, if we simply create a graph representing the squares walked in, and then find the shortest path on this we will have solved the problem. This graph will have a node for each cell walked in, and an edge between nodes if the original ant went from one to the other (edges are bi-directional). Since all edge weights are 1, we can use a bfs or dfs to solve it.
+
+In the competition, the method I choose to represent the graph was on a grid. Since the ant could only walk 60 squares in any direction, by starting it in the centre of a 130 by 130 grid I could track exactly where it had gone, without worrying about it reaching the edges. This was a convenient representation, and could be used in future problems.

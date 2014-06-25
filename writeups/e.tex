@@ -1,0 +1,23 @@
+\section*{E. Grachten}
+
+The main difficultly with this problem is understanding what exactly you need to calculate, and what you are given. Essentially, there exists a right angle triangle $TBD$ (the right angle is the angle $TBD$). There are also two points: $A$ somewhere on the line $TB$, and $C$ somewhere on the line $TD$ such that $AC$ is parallel to $BD$. Given the distances $AB$, $AC$ and $BD$, calculate $AT$.
+
+After looking at the diagram, it is easy to see that this is a problem of similar triangles. The triangles $TAC$ and $TBD$ and similar, and this implies that $\frac{TB}{TA} = \frac{BD}{AC}$. Lets $a = AB$, $b = AC$, $c = BD$, and $x = AT$. This means that:
+\\
+ $\implies \frac{x + a}{x} = \frac{c}{b}$
+\\
+$\implies xb + ab = xc$
+\\
+$\implies x(b - c) = -ab$
+\\
+$\implies x = \frac{ab}{c - b}$
+
+However, we need to print out the exact fraction, rather than a decimal. To do this, we calculate the top half ($ab$), and the bottom half ($c - b$), and then reduce them to the lowest common denominator by calculating the gcd, and dividing both by it. A simple bit of code to find the gcd:
+
+\begin{verbatim}
+int gcd(int a, int b) {
+   if (a < b) return gcd(b, a);
+   if (b == 0) return a;
+   return gcd(b, a % b);
+}
+\end{verbatim}

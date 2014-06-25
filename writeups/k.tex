@@ -1,0 +1,9 @@
+\section*{K. Zombie Invasion}
+
+One of the first observations to make is that it doesn't matter what order villagers move in, the outcome will always be the same. After making this, we can also see that we can go back steps without any problems, where a back step is taking a villager at a certain village and putting two villagers in the village to the right. In fact, we can keep on going back until there are only villagers in the village on the far right. But how many will there be?
+
+After some thinking, each time we take a villager and move them to the right, we effectively double it. If we take both of those copies, and move them one more, then we have 4 copies. Recognising this, we see that a villager $i$ villages to the left of the far right one is worth $2^i$ villagers in the far right one. So, we can simply multiply the amount in each village by this $2^i$ and add it to the far right value, which will reduce this problem to only having villagers in the far right.
+
+Now, we can move all villagers in batches. Let $x$ be the number of villagers in the current village. Initially $x$ is the total we calculated from before. If $x$ is odd, clearly one must be left behind. However, the rest of the villages will move to the next one, and half will be culled, leaving $\lfloor \frac{x}{2} \rfloor$ in the next village. This will generate our answer.
+
+However, we don't actually have to simulate this. Seeing that what this effectively is doing is writing out the binary representation of $x$, we can simply use bitwise operators to extract the $i^{th}$ bit of $x$, and write that out instead. To handle the leftmost village, we divide $x$ by $2^{20}$, and print that out.

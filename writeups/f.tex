@@ -1,0 +1,7 @@
+\section*{F. Digit Sum}
+
+The essential observation to make about this problem is that the actual numbers made do not matter, but rather where we place each digit. Instead of imagining it as forming two numbers and summing them, we can see it as summing each digit multiplied by a certain power of 10 corresponding to which place we put it in. This means we can only use a power of 10 twice at most.
+
+Realising this, it is easy to see that a greedy strategy of assigning the highest digits with the lowest power of 10s works, and will give us the lowest sum. However, a slight problem occurs since 0 can not lead a number. This means there must be two non-zero numbers with a higher place than any 0. It makes sense to use the lowest two, as we still want to minimise the sum. Luckily, it is guaranteed that there is two non-zero numbers, so we can simple pick the two lowest non-zero numbers, and use these as the highest place in each of the numbers we will be forming. After picking these, we can perform the greedy normally.
+
+On a different note, there also exists a dynamic programming solution that solves this, since the number of digits is so low. We can use the subproblem of "What is the minimum sum given I have to place this subset of the original, and I have already placed $A$ in the first number and $B$ in the second". This has a state of $O(2^N N^2)$, which is only around $50\ 000 \times 200 = 10\ 000\ 000$. However, the greedy is both faster and easier to see.

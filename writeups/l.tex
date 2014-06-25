@@ -1,0 +1,7 @@
+\section*{L. Trapezoid Walkway}
+
+First off, we work out that the area of a trapezoid with widths $a$ and $b$, and height $h$ is $\frac{(a + b)h}{2}$. However, since we are paying 2 cents per square centimetre, this means the total cost in cents is $(a + b)h$.
+
+Secondly, we can see this problem as slowly building up a line of trapezoids, until we reach the correct width at the end of a trapezoid. This means our state is simply the current ending width of our path, and trapezoids represent transitions from one state to another with a certain cost.
+
+Combining these ideas, we realise that we have a graph, with nodes for each possible width, and edges being trapezoids with the cost of that edge being the cost of the trapezoid. Each trapezoid corresponds to two edges, since they can be flipped. The width of the porch and gazebo represent the starting and ending nodes we need to find a shortest path between. Using our favourite shortest path algorithm (such as dijkstra's), we can easily solve this problem.

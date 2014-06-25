@@ -1,0 +1,53 @@
+\section*{B. Influence}
+
+The first step in solving this problem is representing the data in a meaningful way. Being able to quickly do this is a great skill to have, as it means you can use techniques you have already developed to solve the problem, instead of having to come up with new ones on the fly.
+
+For this problem, it is fairly easy to see that it can be represented as a graph. Each person can be represented by a vertice(node), and a directed edge goes between two vertices (say from \emph{a} to \emph{b}) if \emph{a} influences \emph{b}. Being transitive, this also means that \emph{a} can influence anyone it can reach by following a path that starts from its node. Finally, the condition that if \emph{x} can influence \emph{y} implies \emph{y} can not influence \emph{x} means that there is not a cycle (a path that starts and ends in some node).
+
+Since it is a directed graph, with no cycles, it is an directed acyclic graph (a DAG for short). These types of graphs pop up quite a bit, and are very convenient for performing recursive algorithms on, as there is no chance of finding yourself in a loop when following the edges. For this question, we will describe three different methods that would be likely to be thought up to solve this problem.
+
+\subsection*{DFS from each node}
+
+An easy method to try is for each node, perform a DFS from it keeping track of how many nodes you've seen. Some code:
+
+\begin{verbatim}
+Integer dfs(Node At)
+   Mark At as seen
+   Set count to 1
+   For each node Next that At influences
+      If Next is not seen
+         count = count + dfs(Next)
+   Return count
+\end{verbatim}
+
+In between each DFS we clear seen.
+
+However, this algorithm runs in $O(nE)$, where $n$ is the number of nodes and $E$ is the number of edges (or influences) given. This is too slow, as in the worst case it could be $5\ 000 \times 250\ 000 = 1\ 250\ 000\ 000$, which is far too large to run in time. A different way of doing this is needed.
+\newpage
+\subsection*{Cache how many each node can influence}
+
+An optimisation we can make to this is to cache how many nodes each node can influence. We realise that when we are calculating how many a certain node influences, we are recalculating the results for some of the nodes. Sample code that shows what this is about:
+
+\begin{verbatim}
+Integer dfs(Node At)
+   Mark At as seen
+   Set count to 1
+   For each node Next that At influences
+      If Next is not seen
+         count = count + dfs(Next)
+      Else
+         count = count + store[Next]
+   store[At] = count
+   Return count
+\end{verbatim}
+
+This time, we don't clear seen in between each DFS, so that if we see a node again we can just return the answer previously calculated.
+
+This runs in $O(n + E)$, which is fast enough. However, it is actually not correct, as nodes could get counted twice, if there are multiple ways for a path from one node to reach another. As an example, consider the graph with $A \to B$, $A \to C$, $B \to D$ and $C \to D$. In this graph, $D$ will get counted twice for $A$, which leads to $A$'s total being 5 instead of 4. So, we need something which will not double count.
+
+\subsection*{Cache which nodes each node can reach}
+
+Taking the previous idea of caching results, we decide instead of caching the amount of nodes the node can reach, to cache \emph{which} nodes it can reach. Then, for each node we examine the nodes it leads to, and merge the list of nodes they can reach to its own. By representing this as a two dimensional boolean array, where the value \texttt{array[x][y]} is equivalent to \emph{can x influence y}, our time complexity becomes $O(En)$, as for each edge we need to preform a merge, which takes $O(n)$. After we have calculated for each node what other nodes it can reach, simply counting the amount of these will give us the answer. However, this should be two slow, for the same reasons as the first algorithm (in the competition it ran in time). To improve this, we realise that the merge is equivalent to calculating the bitwise or of the two influence values. So, by representing 64 influence values with a single long long, we are able to merge 64 values in one instruction, which gives us a significantly low constant factor.
+
+
+
